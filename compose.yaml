@@ -12,6 +12,15 @@ services:
     image: jaredzg/dota-scraper
     build:
       context: ./dota-scraper
+    volumes:
+      - type: volume
+        source: scraper-items
+        target: /app/data
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./dota-scraper
+        target: /app
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the
@@ -39,8 +48,8 @@ services:
 #       interval: 10s
 #       timeout: 5s
 #       retries: 5
-# volumes:
-#   db-data:
+volumes:
+  scraper-items:
 # secrets:
 #   db-password:
 #     file: db/password.txt
