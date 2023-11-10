@@ -13,9 +13,9 @@ services:
     build:
       context: ./dota-scraper
     environment:
-      DOTA_DB_HOST: db:5432
+      DOTA_DB_HOST: postgres:5432
       DOTA_DB_USER: database
-      DOTA_DB_PASSWORD_FILE: /run/secrets/db_password
+      DOTA_DB_PASSWORD_FILE: /run/secrets/postgres_password
     volumes:
       - type: volume
         source: scraper-items
@@ -23,49 +23,56 @@ services:
         volume:
           nocopy: true
       - type: bind
-        source: ./dota-scraper
+        source: ./dota-scraper/src
         target: /app/src
     ports:
       - 8000:5432
     secrets:
-      - db-password
+      - postgres-password
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
+
   database:
     image: jaredzg/dota-database
     build:
       context: ./dota-database
     environment:
-      NODE_ENV: development
-      DOTA_DB_HOST: db:5432
-      DOTA_DB_USER: database
-      DOTA_DB_PASSWORD_FILE: /run/secrets/db_password
+      - NODE_ENV=development
+      - DOTA_DB_HOST=postgres
+      - DOTA_DB_NAME=dota-database
+      - DOTA_DB_USER=database
+      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres_password
+    volumes:
+      - type: bind
+        source: ./dota-database/src
+        target: /app/src
+      - type: bind
+        source: ./dota-database/configs
+        target: /app/configs
+      - type: bind
+        source: ./dota-database/drizzle
+        target: /app/drizzle
     ports:
       - 8001:5432
     secrets:
-      - db-password
-    # The commented out section below is an example of how to define a PostgreSQL
-    # database that your application can use. `depends_on` tells Docker Compose to
-    # start the database before your application. The `db-data` volume persists the
-    # database data between container restarts. The `db-password` secret is used
-    # to set the database password. You must create `db/password.txt` and add
-    # a password of your choosing to it before running `docker compose up`.
+      - postgres-password
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
-  db:
+
+  postgres:
     image: postgres
     restart: always
     user: postgres
     secrets:
-      - db-password
+      - postgres-password
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=dota-database
       - POSTGRES_USER=database
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
     expose:
       - 5432
     healthcheck:
@@ -75,7 +82,7 @@ services:
       retries: 5
 volumes:
   scraper-items:
-  db-data:
+  postgres-data:
 secrets:
-  db-password:
+  postgres-password:
     file: ./dota-database/secrets/password.txt
