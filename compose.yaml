@@ -61,6 +61,26 @@ services:
       postgres:
         condition: service_healthy
 
+  postgres:
+    image: postgres
+    restart: always
+    user: postgres
+    secrets:
+      - postgres-password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=dota-database
+      - POSTGRES_USER=database
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   scraper-items:
   postgres-data:
