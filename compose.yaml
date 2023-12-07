@@ -13,8 +13,8 @@ services:
     build:
       context: ./dota-scraper
     environment:
-      DOTA_DB_HOST: postgres:5432
-      DOTA_DB_USER: database
+      DOTA_DB_HOST: postgres
+      DOTA_DB_USER: postgres
       DOTA_DB_PASSWORD_FILE: /run/secrets/postgres_password
     volumes:
       - type: volume
@@ -33,25 +33,25 @@ services:
       postgres:
         condition: service_healthy
 
-  database:
-    image: jaredzg/dota-database
+  backend:
+    image: jaredzg/dota-backend
     build:
-      context: ./dota-database
+      context: ./dota-backend
     environment:
       - NODE_ENV=development
       - DOTA_DB_HOST=postgres
       - DOTA_DB_NAME=dota-database
-      - DOTA_DB_USER=database
-      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres_password
+      - DOTA_DB_USER=postgres
+      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
     volumes:
       - type: bind
-        source: ./dota-database/src
+        source: ./dota-backend/src
         target: /app/src
       - type: bind
-        source: ./dota-database/configs
+        source: ./dota-backend/configs
         target: /app/configs
       - type: bind
-        source: ./dota-database/drizzle
+        source: ./dota-backend/drizzle
         target: /app/drizzle
     ports:
       - 8001:5432
@@ -71,10 +71,10 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=dota-database
-      - POSTGRES_USER=database
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
-    expose:
-      - 5432
+    ports:
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s
@@ -87,4 +87,4 @@ volumes:
 
 secrets:
   postgres-password:
-    file: ./dota-database/secrets/password.txt
+    file: ./dota-backend/secrets/password.txt
