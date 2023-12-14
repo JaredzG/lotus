@@ -2,3 +2,6 @@
 	path = dota-scraper
 	url = https://github.com/JaredzG/dota-scraper.git
 
+[submodule "dota-database"]
+	path = dota-database
+	url = https://github.com/JaredzG/dota-database.git
