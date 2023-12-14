@@ -1,6 +1,4 @@
 [submodule "dota-scraper"]
 	path = dota-scraper
 	url = https://github.com/JaredzG/dota-scraper.git
-[submodule "dota-backend"]
-	path = dota-backend
-	url = https://github.com/JaredzG/dota-backend.git
+
