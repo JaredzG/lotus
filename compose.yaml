@@ -13,9 +13,9 @@ services:
     build:
       context: ./dota-scraper
     environment:
-      DOTA_DB_HOST: postgres
-      DOTA_DB_USER: postgres
-      DOTA_DB_PASSWORD_FILE: /run/secrets/postgres_password
+      - DOTA_DB_HOST=postgres
+      - DOTA_DB_USER=postgres
+      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
     volumes:
       - type: volume
         source: scraper-items
@@ -33,10 +33,10 @@ services:
       postgres:
         condition: service_healthy
 
-  backend:
-    image: jaredzg/dota-backend
+  database:
+    image: jaredzg/dota-database
     build:
-      context: ./dota-backend
+      context: ./dota-database
     environment:
       - NODE_ENV=development
       - DOTA_DB_HOST=postgres
@@ -44,14 +44,19 @@ services:
       - DOTA_DB_USER=postgres
       - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
     volumes:
+      - type: volume
+        source: scraper-items
+        target: /app/data
+        volume:
+          nocopy: true
       - type: bind
-        source: ./dota-backend/src
+        source: ./dota-database/src
         target: /app/src
       - type: bind
-        source: ./dota-backend/configs
+        source: ./dota-database/configs
         target: /app/configs
       - type: bind
-        source: ./dota-backend/drizzle
+        source: ./dota-database/drizzle
         target: /app/drizzle
     ports:
       - 8001:5432
@@ -87,4 +92,4 @@ volumes:
 
 secrets:
   postgres-password:
-    file: ./dota-backend/secrets/password.txt
+    file: ./dota-database/secrets/password.txt
