@@ -1,4 +1,4 @@
-.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim copy generate push drop upsert delete check
+.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim copy generate push drop upsert delete check finstall fdev
 
 up:
 	@docker compose up -d
@@ -36,23 +36,26 @@ scrapehm:
 scrapeim:
 	@docker compose exec scraper make itemsm
 
-copy:
+scrapecp:
 	@docker compose cp scraper:/app/data temp
 
-generate:
-	@docker compose exec database npm run migration:generate
+dbmgen:
+	@docker compose exec database make gen
 
-push:
-	@docker compose exec database npm run migration:push
+dbmpush:
+	@docker compose exec database make push
 
-drop:
-	@docker compose exec database npm run migration:drop
+dbmdrop:
+	@docker compose exec database make drop
 
-upsert:
+dbupsert:
 	@docker compose exec database make upsert
 
-delete:
+dbdelete:
 	@docker compose exec database make delete
 
-check:
+dbcheck:
 	@docker compose exec database make check
+
+fdev:
+	@docker compose exec frontend make dev
