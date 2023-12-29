@@ -86,6 +86,14 @@ services:
       timeout: 5s
       retries: 5
 
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 8002:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=jaredzgallardo@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=Seafloweri01!
+
 volumes:
   scraper-items:
   postgres-data:
