@@ -66,16 +66,27 @@ services:
       postgres:
         condition: service_healthy
 
+  frontend:
+    image: jaredzg/dota-frontend
+    build:
+      context: ./dota-frontend
+    ports:
+      - 8003:8003
+    volumes:
+      - type: bind
+        source: ./dota-frontend
+        target: /app
+
   postgres:
     image: postgres
     restart: always
     user: postgres
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=dota-database
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     secrets:
@@ -91,6 +102,8 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=pgadmin@email.com
       - PGADMIN_DEFAULT_PASSWORD_FILE=/run/secrets/pgadmin-password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
     ports:
       - 8002:80
     secrets:
@@ -99,6 +112,7 @@ services:
 volumes:
   scraper-items:
   postgres-data:
+  pgadmin-data:
 
 secrets:
   postgres-password:
