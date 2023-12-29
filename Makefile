@@ -1,4 +1,4 @@
-.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim copy generate push drop upsert delete check finstall fdev
+.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim copy generate push drop upsert delete check fdev
 
 up:
 	@docker compose up -d
