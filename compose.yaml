@@ -108,6 +108,9 @@ services:
       - 8002:80
     secrets:
       - pgadmin-password
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   scraper-items:
