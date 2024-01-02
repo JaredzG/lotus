@@ -2,7 +2,6 @@
 # If you need more help, visit the Docker compose reference guide at
 # https://docs.docker.com/compose/compose-file/
 
-# Here the instructions define your application as a service called "server".
 # This service is built from the Dockerfile in the current directory.
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
@@ -23,8 +22,8 @@ services:
         volume:
           nocopy: true
       - type: bind
-        source: ./dota-scraper/src
-        target: /app/src
+        source: ./dota-scraper
+        target: /app
     ports:
       - 8000:5432
     secrets:
@@ -50,14 +49,8 @@ services:
         volume:
           nocopy: true
       - type: bind
-        source: ./dota-database/src
-        target: /app/src
-      - type: bind
-        source: ./dota-database/configs
-        target: /app/configs
-      - type: bind
-        source: ./dota-database/drizzle
-        target: /app/drizzle
+        source: ./dota-database
+        target: /app
     ports:
       - 8001:5432
     secrets:
@@ -75,6 +68,21 @@ services:
     volumes:
       - type: bind
         source: ./dota-frontend
+        target: /app
+
+  backend:
+    image: jaredzg/dota-backend
+    build:
+      context: ./dota-backend
+    environment:
+      - NODE_ENV=development
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8004
+    ports:
+      - 8004:8004
+    volumes:
+      - type: bind
+        source: ./dota-backend
         target: /app
 
   postgres:
