@@ -1,4 +1,4 @@
-.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim scrapecp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck bdev bserve bwatch
+.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim scrapecp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck bdev bserve bwatch fdev fbuild fpreview
 
 up:
 	@docker compose up -d
@@ -65,3 +65,12 @@ bserve:
 
 bwatch:
 	@docker compose exec backend make watch
+
+fdev:
+	@docker compose exec frontend make dev
+	
+fbuild:
+	@docker compose exec frontend make build
+
+fpreview:
+	@docker compose exec frontend make preview
