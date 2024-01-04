@@ -8,64 +8,15 @@
 # https://github.com/docker/awesome-compose
 version: "3.8"
 services:
-  scraper:
-    image: jaredzg/dota-scraper
-    build:
-      context: ./dota-scraper
-    environment:
-      - DOTA_DB_HOST=postgres
-      - DOTA_DB_USER=postgres
-      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
-    volumes:
-      - type: volume
-        source: scraper-items
-        target: /app/data
-        volume:
-          nocopy: true
-      - type: bind
-        source: ./dota-scraper
-        target: /app
-    ports:
-      - 8000:5432
-    secrets:
-      - postgres-password
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  database:
-    image: jaredzg/dota-database
-    build:
-      context: ./dota-database
-    environment:
-      - NODE_ENV=development
-      - DOTA_DB_HOST=postgres
-      - DOTA_DB_NAME=dota-database
-      - DOTA_DB_USER=postgres
-      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
-    volumes:
-      - type: volume
-        source: scraper-items
-        target: /app/data
-        volume:
-          nocopy: true
-      - type: bind
-        source: ./dota-database
-        target: /app
-    ports:
-      - 8001:5432
-    secrets:
-      - postgres-password
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   frontend:
     image: jaredzg/dota-frontend
     build:
       context: ./dota-frontend
+    environment:
+      - SITE_HOST=0.0.0.0
+      - SITE_PORT=3000
     ports:
-      - 8003:8003
+      - 3000:3000
     volumes:
       - type: bind
         source: ./dota-frontend
@@ -77,14 +28,28 @@ services:
       context: ./dota-backend
     environment:
       - NODE_ENV=development
+      - DOTA_DB_HOST=postgres
+      - DOTA_DB_NAME=dota-database
+      - DOTA_DB_USER=postgres
+      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
       - SERVER_HOST=0.0.0.0
-      - SERVER_PORT=8004
+      - SERVER_PORT=8080
     ports:
-      - 8004:8004
+      - 8080:8080
     volumes:
+      - type: volume
+        source: scraper-items
+        target: /app/data
+        volume:
+          nocopy: true
       - type: bind
         source: ./dota-backend
         target: /app
+    secrets:
+      - postgres-password
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres
