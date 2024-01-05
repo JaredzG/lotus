@@ -21,6 +21,9 @@ services:
       - type: bind
         source: ./dota-frontend
         target: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   backend:
     image: jaredzg/dota-backend
@@ -28,23 +31,24 @@ services:
       context: ./dota-backend
     environment:
       - NODE_ENV=development
-      - DOTA_DB_HOST=postgres
-      - DOTA_DB_NAME=dota-database
-      - DOTA_DB_USER=postgres
-      - DOTA_DB_PASSWORD_FILE=/run/secrets/postgres-password
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD_FILE=/run/secrets/postgres-password
+      - DB_NAME=dota-database
       - SERVER_HOST=0.0.0.0
       - SERVER_PORT=8080
     ports:
       - 8080:8080
     volumes:
+      - type: bind
+        source: ./dota-backend
+        target: /app
       - type: volume
         source: scraper-items
         target: /app/data
         volume:
           nocopy: true
-      - type: bind
-        source: ./dota-backend
-        target: /app
     secrets:
       - postgres-password
     depends_on:
@@ -79,7 +83,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     ports:
-      - 8002:80
+      - 8000:80
     secrets:
       - pgadmin-password
     depends_on:
