@@ -1,4 +1,4 @@
-.PHONY: up upb down downr downv downrv psql scrape scrapeh scrapei scrapehm scrapeim scrapecp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck bdev bserve bwatch fdev fbuild fpreview
+.PHONY: up upb down downr downv downrv psql scrcp scrall scrh scri scrhm scrim scremp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck bdev bserve bwatch fdev fbuild fpreview
 
 up:
 	@docker compose up -d
@@ -21,41 +21,44 @@ downrv:
 psql:
 	@docker compose exec postgres psql
 
-scrape:
-	@docker compose exec scraper make
+scrcp:
+	@docker compose cp backend:/app/data temp
 
-scrapeh:
-	@docker compose exec scraper make heroes
+scrall:
+	@docker compose exec backend make scrall
 
-scrapei:
-	@docker compose exec scraper make items
+scrh:
+	@docker compose exec backend make scrh
 
-scrapehm:
-	@docker compose exec scraper make heroesm
+scrhm:
+	@docker compose exec backend make scrhm
 
-scrapeim:
-	@docker compose exec scraper make itemsm
+scri:
+	@docker compose exec backend make scri
 
-scrapecp:
-	@docker compose cp scraper:/app/data temp
+scrim:
+	@docker compose exec backend make scrim
 
-dbmgen:
-	@docker compose exec database make gen
+scremp:
+	@docker compose exec backend make scremp
 
-dbmpush:
-	@docker compose exec database make push
+dbgen:
+	@docker compose exec backend make dbgen
 
-dbmdrop:
-	@docker compose exec database make drop
+dbpush:
+	@docker compose exec backend make dbpush
+
+dbdrop:
+	@docker compose exec backend make dbdrop
 
 dbupsert:
-	@docker compose exec database make upsert
+	@docker compose exec backend make dbupsert
 
 dbdelete:
-	@docker compose exec database make delete
+	@docker compose exec backend make dbdelete
 
 dbcheck:
-	@docker compose exec database make check
+	@docker compose exec backend make dbcheck
 
 bdev:
 	@docker compose exec backend make dev
