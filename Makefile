@@ -1,4 +1,4 @@
-.PHONY: up upb down downr downv downrv psql scrcp scrall scrh scri scrhm scrim scremp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck fdev fbuild fpreview
+.PHONY: up upb down downr downv downrv psql scrcopy scrall scrh scri scrhm scrim scremp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck fdev fbuild fpreview
 
 up:
 	@docker compose up -d
@@ -21,50 +21,50 @@ downrv:
 psql:
 	@docker compose exec postgres psql
 
-scrcp:
-	@docker compose cp backend:/app/data temp
+scrcopy:
+	@docker compose cp lotus-data-manager:/app/data temp
 
 scrall:
-	@docker compose exec backend make scrall
+	@docker compose exec lotus-data-manager make scrall
 
 scrh:
-	@docker compose exec backend make scrh
+	@docker compose exec lotus-data-manager make scrh
 
 scrhm:
-	@docker compose exec backend make scrhm
+	@docker compose exec lotus-data-manager make scrhm
 
 scri:
-	@docker compose exec backend make scri
+	@docker compose exec lotus-data-manager make scri
 
 scrim:
-	@docker compose exec backend make scrim
+	@docker compose exec lotus-data-manager make scrim
 
 scremp:
-	@docker compose exec backend make scremp
+	@docker compose exec lotus-data-manager make scremp
 
 dbgen:
-	@docker compose exec backend make dbgen
+	@docker compose exec lotus-data-manager make dbgen
 
 dbpush:
-	@docker compose exec backend make dbpush
+	@docker compose exec lotus-data-manager make dbpush
 
 dbdrop:
-	@docker compose exec backend make dbdrop
+	@docker compose exec lotus-data-manager make dbdrop
 
 dbupsert:
-	@docker compose exec backend make dbupsert
+	@docker compose exec lotus-data-manager make dbupsert
 
 dbdelete:
-	@docker compose exec backend make dbdelete
+	@docker compose exec lotus-data-manager make dbdelete
 
 dbcheck:
-	@docker compose exec backend make dbcheck
+	@docker compose exec lotus-data-manager make dbcheck
 
 fdev:
-	@docker compose exec frontend make dev
+	@docker compose exec lotus-web-app make dev
 	
 fbuild:
-	@docker compose exec frontend make build
+	@docker compose exec lotus-web-app make build
 
 fpreview:
-	@docker compose exec frontend make preview
+	@docker compose exec lotus-web-app make preview

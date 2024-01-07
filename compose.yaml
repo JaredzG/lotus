@@ -8,10 +8,10 @@
 # https://github.com/docker/awesome-compose
 version: "3.8"
 services:
-  frontend:
-    image: jaredzg/dota-frontend
+  lotus-web-app:
+    image: jaredzg/lotus-web-app
     build:
-      context: ./dota-frontend
+      context: ./lotus-web-app
     environment:
       - SITE_HOST=0.0.0.0
       - SITE_PORT=3000
@@ -19,33 +19,33 @@ services:
       - 3000:3000
     volumes:
       - type: bind
-        source: ./dota-frontend
+        source: ./lotus-web-app
         target: /app
     depends_on:
       postgres:
         condition: service_healthy
 
-  backend:
-    image: jaredzg/dota-backend
+  lotus-data-manager:
+    image: jaredzg/lotus-data-manager
     build:
-      context: ./dota-backend
+      context: ./lotus-data-manager
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD_FILE=/run/secrets/postgres-password
-      - DB_NAME=dota-database
+      - DB_NAME=lotus-database
       - SERVER_HOST=0.0.0.0
       - SERVER_PORT=8080
     ports:
       - 8080:8080
     volumes:
       - type: bind
-        source: ./dota-backend
+        source: ./lotus-data-manager
         target: /app
       - type: volume
-        source: scraper-items
+        source: lotus-scraper-data
         target: /app/data
         volume:
           nocopy: true
@@ -60,7 +60,7 @@ services:
     restart: always
     user: postgres
     environment:
-      - POSTGRES_DB=dota-database
+      - POSTGRES_DB=lotus-database
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
     volumes:
@@ -91,7 +91,7 @@ services:
         condition: service_healthy
 
 volumes:
-  scraper-items:
+  lotus-scraper-data:
   postgres-data:
   pgadmin-data:
 
