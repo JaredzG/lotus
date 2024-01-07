@@ -1,6 +1,6 @@
 [submodule "lotus-data-manager"]
 	path = lotus-data-manager
 	url = https://github.com/JaredzG/lotus-data-manager.git
-[submodule "lotus-app"]
-	path = lotus-app
-	url = https://github.com/JaredzG/lotus-app.git
+[submodule "lotus-web-app"]
+	path = lotus-web-app
+	url = https://github.com/JaredzG/lotus-web-app.git
