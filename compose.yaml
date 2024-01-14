@@ -36,10 +36,6 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD_FILE=/run/secrets/postgres-password
       - DB_NAME=lotus-database
-      - SERVER_HOST=0.0.0.0
-      - SERVER_PORT=8080
-    ports:
-      - 8080:8080
     volumes:
       - type: bind
         source: ./lotus-data-manager
