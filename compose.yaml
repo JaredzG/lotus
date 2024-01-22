@@ -36,6 +36,10 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD_FILE=/run/secrets/postgres-password
       - DB_NAME=lotus-database
+      - S3_BUCKET_NAME=lotus-app-images
+      - S3_BUCKET_REGION=us-east-2
+      - S3_BUCKET_ACCESS_KEY=AKIA55IGFKLCGNSIHZWT
+      - S3_BUCKET_SECRET_ACCESS_KEY_FILE=/run/secrets/s3-bucket-secret-access-key
     volumes:
       - type: bind
         source: ./lotus-data-manager
@@ -47,6 +51,7 @@ services:
           nocopy: true
     secrets:
       - postgres-password
+      - s3-bucket-secret-access-key
     depends_on:
       postgres:
         condition: service_healthy
@@ -96,3 +101,5 @@ secrets:
     file: ./secrets/postgres.password.txt
   pgadmin-password:
     file: ./secrets/pgadmin.password.txt
+  s3-bucket-secret-access-key:
+    file: ./secrets/s3-bucket.secret-access-key.txt
