@@ -1,4 +1,4 @@
-.PHONY: up upb down downr downv downrv psql scrcopy scrall scrh scri scrhm scrim scremp dbmgen dbmpush dbmdrop dbupsert dbdelete dbcheck s3upload fdev fbuild fpreview
+.PHONY: up upb down downr downv downrv psql scrcopy scrall scrh scri scrhm scrim scremp dbmgen dbmpush dbmdrop dbupsert dbdelete s3upload fdev fbuild fpreview fdbis
 
 up:
 	@docker compose up -d
@@ -57,9 +57,6 @@ dbupsert:
 dbdelete:
 	@docker compose exec lotus-data-manager make dbdelete
 
-dbcheck:
-	@docker compose exec lotus-data-manager make dbcheck
-
 s3upload:
 	@docker compose exec lotus-data-manager make s3upload
 
@@ -71,3 +68,6 @@ fbuild:
 
 fpreview:
 	@docker compose exec lotus-web-app make preview
+
+fdbis:
+	@docker compose exec lotus-web-app make dbis
